@@ -22,8 +22,7 @@ from telegram.constants import ParseMode
 #  CONFIG – Your personal details
 #  ⚠️ IMPORTANT: Replace with your NEW token from BotFather!
 # ─────────────────────────────────────────────
-TOKEN = "7740641035:AAE8O77uKKt7QItczMHiVUYubiiOjaMf8f4"  # ← REPLACE THIS WITH YOUR NEW TOKEN!
-
+TOKEN = os.getenv("TOKEN")
 # Telegram user IDs
 ALLOWED_USERS = [6944104031, 5726835273]  # 6944104031 = Lu (gf), 5726835273 = Abi (you)
 
