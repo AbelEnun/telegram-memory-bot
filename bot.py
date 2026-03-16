@@ -993,13 +993,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ────────────────────────────────────────────────────────────────────────────
 #  Main
 # ────────────────────────────────────────────────────────────────────────────
-
-import asyncio
-
-async def main():
+def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
-    # Conversation handler for /note command
     note_conv = ConversationHandler(
         entry_points=[CommandHandler("note", note_command)],
         states={
@@ -1028,8 +1024,8 @@ async def main():
 
     logger.info("💖 Lu & Abi's Memory Bot is running…")
 
-    await app.run_polling()
+    app.run_polling()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
