@@ -1,3 +1,20 @@
+import threading
+import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running")
+
+def run_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), Handler)
+    server.serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
+
 import os
 import json
 import random
@@ -22,7 +39,8 @@ from telegram.constants import ParseMode
 #  CONFIG – Your personal details
 #  ⚠️ IMPORTANT: Replace with your NEW token from BotFather!
 # ─────────────────────────────────────────────
-TOKEN = os.getenv("TOKEN")
+TOKEN = "7740641035:AAE8O77uKKt7QItczMHiVUYubiiOjaMf8f4"  # ← REPLACE THIS WITH YOUR NEW TOKEN!
+
 # Telegram user IDs
 ALLOWED_USERS = [6944104031, 5726835273]  # 6944104031 = Lu (gf), 5726835273 = Abi (you)
 
@@ -993,9 +1011,11 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ────────────────────────────────────────────────────────────────────────────
 #  Main
 # ────────────────────────────────────────────────────────────────────────────
+
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
+    # Conversation handler for /note command
     note_conv = ConversationHandler(
         entry_points=[CommandHandler("note", note_command)],
         states={
@@ -1007,25 +1027,22 @@ def main():
     )
 
     app.add_handler(note_conv)
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("memories", show_memories))
-    app.add_handler(CommandHandler("random", random_memory))
-    app.add_handler(CommandHandler("notes", show_notes))
-    app.add_handler(CommandHandler("quote", love_quote))
+    app.add_handler(CommandHandler("start",     start))
+    app.add_handler(CommandHandler("help",      help_command))
+    app.add_handler(CommandHandler("memories",  show_memories))
+    app.add_handler(CommandHandler("random",    random_memory))
+    app.add_handler(CommandHandler("notes",     show_notes))
+    app.add_handler(CommandHandler("quote",     love_quote))
     app.add_handler(CommandHandler("birthdays", birthdays_command))
-    app.add_handler(CommandHandler("story", story_command))
-    app.add_handler(CommandHandler("fortune", fortune_command))
-    app.add_handler(CommandHandler("anniversary", anniversary_command))
-
+    app.add_handler(CommandHandler("story",     story_command))
+    app.add_handler(CommandHandler("fortune",   fortune_command))
+    app.add_handler(CommandHandler("anniversary", anniversary_command))  # New command!
     app.add_handler(MessageHandler(filters.PHOTO, save_photo))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
     app.add_handler(CallbackQueryHandler(button_handler))
 
     logger.info("💖 Lu & Abi's Memory Bot is running…")
-
     app.run_polling()
-
 
 if __name__ == "__main__":
     main()
