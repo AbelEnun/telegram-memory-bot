@@ -994,7 +994,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #  Main
 # ────────────────────────────────────────────────────────────────────────────
 
-def main():
+import asyncio
+
+async def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
     # Conversation handler for /note command
@@ -1009,22 +1011,25 @@ def main():
     )
 
     app.add_handler(note_conv)
-    app.add_handler(CommandHandler("start",     start))
-    app.add_handler(CommandHandler("help",      help_command))
-    app.add_handler(CommandHandler("memories",  show_memories))
-    app.add_handler(CommandHandler("random",    random_memory))
-    app.add_handler(CommandHandler("notes",     show_notes))
-    app.add_handler(CommandHandler("quote",     love_quote))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("memories", show_memories))
+    app.add_handler(CommandHandler("random", random_memory))
+    app.add_handler(CommandHandler("notes", show_notes))
+    app.add_handler(CommandHandler("quote", love_quote))
     app.add_handler(CommandHandler("birthdays", birthdays_command))
-    app.add_handler(CommandHandler("story",     story_command))
-    app.add_handler(CommandHandler("fortune",   fortune_command))
-    app.add_handler(CommandHandler("anniversary", anniversary_command))  # New command!
+    app.add_handler(CommandHandler("story", story_command))
+    app.add_handler(CommandHandler("fortune", fortune_command))
+    app.add_handler(CommandHandler("anniversary", anniversary_command))
+
     app.add_handler(MessageHandler(filters.PHOTO, save_photo))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
     app.add_handler(CallbackQueryHandler(button_handler))
 
     logger.info("💖 Lu & Abi's Memory Bot is running…")
-    app.run_polling()
+
+    await app.run_polling()
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
